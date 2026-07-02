@@ -1,22 +1,9 @@
 /*
-  Editable global theme layer.
-
-  Safe for UI editors / AI tools:
-  - Full site background
-  - Global text color
-  - Editable-only typography
-  - Selection color
-  - Scrollbar feel
-  - Article body typography accents
-
-  Do not add data fetching, scripts, or route logic here.
+  Editable global theme layer — dark modern grotesque aesthetic
+  (reference: tubix.webflow.io).
 */
 
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
-
-/* Per-task display + body typefaces (consumed via task-themes.ts). */
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Sora:wght@400;500;600;700;800&family=Syne:wght@500;600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
 body {
   background-color: var(--slot4-page-bg) !important;
@@ -25,22 +12,13 @@ body {
 }
 
 .editable-site-root {
-  /* Yelp-style clean sans, used for both display and body. */
-  --editable-font-display: 'Inter', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
-  --editable-font-body: 'Inter', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
-  /* Premium easing curve used across every hover + transition. */
-  --ease-premium: cubic-bezier(0.22, 1, 0.36, 1);
+  --editable-font-display: 'Bricolage Grotesque', 'Inter Tight', system-ui, sans-serif;
+  --editable-font-body: 'Inter Tight', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  --editable-font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+  --ease-premium: cubic-bezier(0.22, 0.61, 0.36, 1);
   font-family: var(--editable-font-body);
 }
 
-/*
-  Site-wide premium motion.
-
-  1. Unify the easing of every existing transition/hover to one refined curve.
-  2. Add a smooth "post open" entry animation that replays on each navigation
-     (driven by EditablePageMotion remounting the content per route).
-  Durations stay defined per-component via Tailwind utilities.
-*/
 .editable-site-root *,
 .editable-site-root *::before,
 .editable-site-root *::after {
@@ -50,7 +28,7 @@ body {
 @keyframes editable-enter {
   from {
     opacity: 0;
-    transform: translate3d(0, 22px, 0);
+    transform: translate3d(0, 24px, 0);
   }
   to {
     opacity: 1;
@@ -58,16 +36,38 @@ body {
   }
 }
 
-/* The content region rises + fades on open; `backwards` clears the transform
-   afterwards so sticky sidebars keep working. */
 .editable-enter > * {
-  animation: editable-enter 0.6s var(--ease-premium) backwards;
+  animation: editable-enter 0.7s var(--ease-premium) backwards;
   will-change: transform, opacity;
 }
 
+/* Scroll-reveal utility used by EditableReveal.tsx */
+.editable-reveal {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.7s var(--ease-premium),
+    transform 0.7s var(--ease-premium);
+  will-change: transform, opacity;
+}
+.editable-reveal.is-hidden {
+  opacity: 0;
+  transform: translate3d(0, 24px, 0);
+}
+.editable-reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .editable-enter > * {
-    animation: none;
+  .editable-enter > *,
+  .editable-reveal,
+  .editable-reveal.is-hidden,
+  .editable-reveal.is-visible {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
   }
   .editable-site-root *,
   .editable-site-root *::before,
@@ -83,7 +83,8 @@ body {
 .editable-site-root h4,
 .editable-display {
   font-family: var(--editable-font-display);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
+  font-weight: 600;
 }
 
 .editable-site-root p,
@@ -96,28 +97,51 @@ body {
   font-family: var(--editable-font-body);
 }
 
-::selection {
-  background: color-mix(in oklab, var(--slot4-accent-fill) 28%, transparent);
-  color: var(--slot4-page-text);
+.editable-mono {
+  font-family: var(--editable-font-mono);
+  letter-spacing: 0.02em;
 }
 
+.editable-eyebrow {
+  font-family: var(--editable-font-body);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+::selection {
+  background: color-mix(in oklab, var(--slot4-accent-fill) 42%, transparent);
+  color: #ffffff;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
 ::-webkit-scrollbar-track {
   background: color-mix(in oklab, var(--slot4-page-bg) 88%, black);
 }
-
 ::-webkit-scrollbar-thumb {
-  background: color-mix(in oklab, var(--slot4-accent) 45%, transparent);
+  background: color-mix(in oklab, var(--slot4-accent) 55%, transparent);
   border-radius: 999px;
 }
-
 ::-webkit-scrollbar-thumb:hover {
-  background: color-mix(in oklab, var(--slot4-accent) 68%, transparent);
+  background: color-mix(in oklab, var(--slot4-accent) 82%, transparent);
 }
 
 .article-content h2 {
-  color: var(--slot4-accent);
+  color: #ffffff;
+  font-family: var(--editable-font-display);
 }
-
+.article-content h3 {
+  color: #ffffff;
+  font-family: var(--editable-font-display);
+}
 .article-content a {
-  color: var(--slot4-accent-fill);
+  color: var(--slot4-accent);
+  text-underline-offset: 3px;
+}
+.article-content strong {
+  color: #ffffff;
 }
