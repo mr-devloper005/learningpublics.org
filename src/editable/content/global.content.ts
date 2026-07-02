@@ -22,15 +22,16 @@ export const globalContent = {
   },
   footer: {
     tagline: 'Stories, resources, and discoverable posts',
-    description: 'A connected publishing surface for articles, visuals, listings, profiles, bookmarks, and downloadable resources.',
+    description: 'A connected publishing surface for long reads, a local directory, visuals, profiles, curated links, and downloadable references.',
     columns: [
       {
-        title: 'Explore',
+        title: 'Discover',
         links: [
-          { label: 'Articles', href: '/articles' },
-          { label: 'Listings', href: '/listings' },
-          { label: 'Images', href: '/image-sharing' },
-          { label: 'PDF Library', href: '/pdf' },
+          { label: 'Field notes', href: '/articles' },
+          { label: 'Local Directory', href: '/listings' },
+          { label: 'Curated Links', href: '/sbm' },
+          { label: 'Gallery', href: '/image-sharing' },
+          { label: 'Library', href: '/pdf' },
         ],
       },
       {
